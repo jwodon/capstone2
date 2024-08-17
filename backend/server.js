@@ -1,13 +1,8 @@
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 5000;
+'use strict';
 
-app.use(express.json()); // Middleware to parse JSON bodies
+const app = require('./app');
+const { PORT } = require('./config/config');
 
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, function () {
+    console.log(`Started on http://localhost:${PORT}`);
 });
