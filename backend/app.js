@@ -1,22 +1,39 @@
-// app.js
 const express = require('express');
 const cors = require('cors');
-
 const { NotFoundError } = require('./expressError');
-
 const userRoutes = require('./routes/users');
+const authRoutes = require('./routes/auth');
 
-app.use('/users', userRoutes);
-
+// Initialize app before using it
 const app = express();
 
-/** Handle 404 errors -- this matches everything */
-app.use(function (req, res, next) {
+// Middleware
+app.use(express.json());
+app.use(
+    cors({
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+);
+
+// Debugging logs
+app.use((req, res, next) => {
+    console.log(`${req.method} request to ${req.url}`);
+    next();
+});
+
+// Routes
+app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
+
+// Handle 404 errors
+app.use((req, res, next) => {
     return next(new NotFoundError());
 });
 
-/** Generic error handler; anything unhandled goes here. */
-app.use(function (err, req, res, next) {
+// Generic error handler
+app.use((err, req, res, next) => {
     if (process.env.NODE_ENV !== 'test') console.error(err.stack);
     const status = err.status || 500;
     const message = err.message;
@@ -26,11 +43,7 @@ app.use(function (err, req, res, next) {
     });
 });
 
-// Middleware
-app.use(express.json());
-app.use(cors());
-
-// Routes
+// Health check route
 app.get('/', (req, res) => {
     res.send('TDEE Tracker API is running');
 });

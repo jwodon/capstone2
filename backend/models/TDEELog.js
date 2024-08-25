@@ -11,7 +11,7 @@ class TDEELog {
         return result.rows[0];
     }
 
-    // Add more static methods for reading, updating, and deleting logs
+    // Add more static methods for reading, updating, and deleting logs as needed
 }
 
 module.exports = TDEELog;
