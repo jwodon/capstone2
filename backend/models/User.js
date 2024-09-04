@@ -105,41 +105,72 @@ class User {
 
     static async updateProfile(
         username,
-        { email, age, gender, height, startingWeight, goalWeight, goalWeightLossPerWeek, startDate, activityLevel }
+        {
+            email,
+            age,
+            gender,
+            height,
+            starting_weight,
+            goal_weight,
+            goal_weight_loss_per_week,
+            start_date,
+            activity_level,
+        }
     ) {
-        const result = await db.query(
-            `UPDATE users
-             SET email = $1,
-                 age = $2,
-                 gender = $3,
-                 height = $4,
-                 starting_weight = $5,
-                 goal_weight = $6,
-                 goal_weight_loss_per_week = $7,
-                 start_date = $8,
-                 activity_level = $9
-             WHERE username = $10
-             RETURNING id, username, email, age, gender, height, starting_weight, goal_weight, goal_weight_loss_per_week, start_date, activity_level`,
-            [
+        try {
+            // Log incoming data
+            console.log('Incoming update data:', {
                 email,
                 age,
                 gender,
                 height,
-                startingWeight,
-                goalWeight,
-                goalWeightLossPerWeek,
-                startDate,
-                activityLevel,
-                username,
-            ]
-        );
+                starting_weight,
+                goal_weight,
+                goal_weight_loss_per_week,
+                start_date,
+                activity_level,
+            });
 
-        const user = result.rows[0];
-        if (!user) {
-            throw new UnauthorizedError('User not found');
+            const result = await db.query(
+                `UPDATE users
+                 SET email = $1,
+                     age = $2,
+                     gender = $3,
+                     height = $4,
+                     starting_weight = $5,
+                     goal_weight = $6,
+                     goal_weight_loss_per_week = $7,
+                     start_date = $8,
+                     activity_level = $9
+                 WHERE username = $10
+                 RETURNING id, username, email, age, gender, height, starting_weight, goal_weight, goal_weight_loss_per_week, start_date, activity_level`,
+                [
+                    email,
+                    age,
+                    gender,
+                    height,
+                    starting_weight,
+                    goal_weight,
+                    goal_weight_loss_per_week,
+                    start_date,
+                    activity_level,
+                    username,
+                ]
+            );
+
+            // Log updated user data
+            console.log('Updated User:', result.rows[0]);
+
+            const user = result.rows[0];
+            if (!user) {
+                throw new UnauthorizedError('User not found');
+            }
+
+            return user;
+        } catch (error) {
+            console.error('Error updating user profile:', error);
+            throw error;
         }
-
-        return user;
     }
 
     static async get(username) {

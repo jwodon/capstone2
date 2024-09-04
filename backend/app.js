@@ -3,6 +3,8 @@ const cors = require('cors');
 const { NotFoundError } = require('./expressError');
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
+const tdeeRoutes = require('./routes/tdeeLogs');
+
 
 // Initialize app before using it
 const app = express();
@@ -12,7 +14,7 @@ app.use(express.json());
 app.use(
     cors({
         origin: 'http://localhost:3000',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
@@ -26,6 +28,8 @@ app.use((req, res, next) => {
 // Routes
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
+app.use('/tdee', tdeeRoutes);
+
 
 // Handle 404 errors
 app.use((req, res, next) => {

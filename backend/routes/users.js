@@ -46,13 +46,16 @@ router.post('/login', async (req, res, next) => {
 });
 
 // Profile route (update)
-router.put('/profile', ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.patch('/:username', ensureCorrectUserOrAdmin, async (req, res, next) => {
+    console.log('Update profile route called');
+    console.log('Request Params:', req.params);
+    console.log('Request Body:', req.body);
     try {
-        const { username } = req.user;
-        const updatedData = req.body;
-        const user = await User.updateProfile(username, updatedData);
-        return res.json(user);
+        const user = await User.updateProfile(req.params.username, req.body);
+        console.log('Updated User:', user);
+        return res.json({ user });
     } catch (err) {
+        console.error('Error in updateProfile route:', err);
         return next(err);
     }
 });
