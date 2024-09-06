@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS tdee_logs (
     date DATE NOT NULL,
     weight DECIMAL(6, 2),
     calories_intake DECIMAL(6, 2),
-    tdee DECIMAL(6, 2),
+    tdee DECIMAL(20, 2),
     calorie_deficit_surplus DECIMAL(6, 2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

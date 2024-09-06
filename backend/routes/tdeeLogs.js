@@ -38,10 +38,8 @@ router.get('/:userId', async (req, res, next) => {
     try {
         const { userId } = req.params;
         const startDate = new Date(req.query.startDate).toISOString().split('T')[0];
-        console.log('Extracted startDate:', startDate); // Verify date format
 
         const logs = await TDEELog.findByUserIdAndStartDate(userId, startDate);
-        console.log('Logs fetched from database:', logs); // Verify logs fetched
 
         return res.json(logs);
     } catch (error) {
