@@ -1,7 +1,20 @@
 const db = require('../config/db');
 
+// Define max limits for weight and calorie intake
+const MAX_WEIGHT = 1000; // Max weight 1000 kg/lbs depending on your unit
+const MAX_CALORIES = 10000; // Max calorie intake
+const MIN_VALUE = 0; // Minimum value for both weight and calories
+
 class TDEELog {
     static async create({ userId, date, weight, caloriesIntake, tdee, calorieDeficitSurplus }) {
+        // Validate weight and caloriesIntake
+        if (weight < MIN_VALUE || weight > MAX_WEIGHT) {
+            throw new Error('Weight value out of allowed range.');
+        }
+        if (caloriesIntake < MIN_VALUE || caloriesIntake > MAX_CALORIES) {
+            throw new Error('Calories intake value out of allowed range.');
+        }
+
         const result = await db.query(
             `INSERT INTO tdee_logs (user_id, date, weight, calories_intake, tdee, calorie_deficit_surplus)
              VALUES ($1, $2, $3, $4, $5, $6)
@@ -12,6 +25,14 @@ class TDEELog {
     }
 
     static async update({ id, weight, caloriesIntake, tdee, calorieDeficitSurplus }) {
+        // Validate weight and caloriesIntake
+        if (weight < MIN_VALUE || weight > MAX_WEIGHT) {
+            throw new Error('Weight value out of allowed range.');
+        }
+        if (caloriesIntake < MIN_VALUE || caloriesIntake > MAX_CALORIES) {
+            throw new Error('Calories intake value out of allowed range.');
+        }
+
         const result = await db.query(
             `UPDATE tdee_logs
              SET weight = $2, calories_intake = $3, tdee = $4, calorie_deficit_surplus = $5
