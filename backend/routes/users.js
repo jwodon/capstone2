@@ -70,4 +70,26 @@ router.get('/:username', ensureCorrectUserOrAdmin, async (req, res, next) => {
     }
 });
 
+// Profile route (delete)
+router.delete('/:username', ensureCorrectUserOrAdmin, async (req, res, next) => {
+    try {
+        console.log('Delete profile route called');
+        const username = req.params.username;
+
+        // Fetch the user to ensure it exists
+        const user = await User.fetchByUsername(username);
+        if (!user) {
+            throw new BadRequestError(`User with username ${username} not found`);
+        }
+
+        // Delete the user
+        await User.delete(username);
+
+        return res.json({ message: 'User deleted' });
+    } catch (err) {
+        console.error('Error in deleteProfile route:', err);
+        return next(err);
+    }
+});
+
 module.exports = router;

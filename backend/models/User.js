@@ -189,6 +189,21 @@ class User {
 
         return user;
     }
+
+    static async delete(username) {
+        try {
+            const result = await db.query(`DELETE FROM users WHERE username = $1 RETURNING username`, [username]);
+
+            if (result.rows.length === 0) {
+                throw new BadRequestError(`No user found with username: ${username}`);
+            }
+
+            return result.rows[0];
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            throw new Error('Error deleting user');
+        }
+    }
 }
 
 module.exports = User;
