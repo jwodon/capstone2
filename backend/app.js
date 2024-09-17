@@ -8,6 +8,7 @@ const tdeeRoutes = require('./routes/tdeeLogs');
 
 // Initialize app before using it
 const app = express();
+const path = require('path');
 
 // Middleware
 app.use(express.json());
